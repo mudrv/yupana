@@ -29,11 +29,12 @@ trait BoxingTag[T] extends Serializable {
 object BoxingTag {
   def apply[T](implicit b: BoxingTag[T]): BoxingTag[T] = b
 
-  implicit def refBoxing[T <: AnyRef](implicit tag: ClassTag[T]): BoxingTag[T] = new BoxingTag[T] {
-    override type R = T
-    override def clazz: Class[T] = tag.runtimeClass.asInstanceOf[Class[T]]
-    override def cast(t: T): T = t
-  }
+  implicit def refBoxing[T <: AnyRef](implicit tag: ClassTag[T]): BoxingTag[T] =
+    new BoxingTag[T] {
+      override type R = T
+      override def clazz: Class[T] = tag.runtimeClass.asInstanceOf[Class[T]]
+      override def cast(t: T): T = t
+    }
 
   implicit val byteBoxing: BoxingTag[Byte] = primitive[Byte, jl.Byte]
   implicit val shortBoxing: BoxingTag[Short] = primitive[Short, jl.Short]
@@ -42,11 +43,12 @@ object BoxingTag {
   implicit val doubleBoxing: BoxingTag[Double] = primitive[Double, jl.Double]
   implicit val booleanBoxing: BoxingTag[Boolean] = primitive[Boolean, jl.Boolean]
 
-  def arrayBoxing[T](implicit tag: ClassTag[T]): BoxingTag[Array[T]] = new BoxingTag[Array[T]] {
-    override type R = Array[T]
-    override def clazz: Class[R] = tag.wrap.runtimeClass.asInstanceOf[Class[Array[T]]]
-    override def cast(t: Array[T]): Array[T] = t
-  }
+  def arrayBoxing[T](implicit tag: ClassTag[T]): BoxingTag[Array[T]] =
+    new BoxingTag[Array[T]] {
+      override type R = Array[T]
+      override def clazz: Class[R] = tag.wrap.runtimeClass.asInstanceOf[Class[Array[T]]]
+      override def cast(t: Array[T]): Array[T] = t
+    }
 
   private def primitive[T <: AnyVal, B <: AnyRef](implicit ev: T => B, bTag: ClassTag[B]): BoxingTag[T] =
     new BoxingTag[T] {

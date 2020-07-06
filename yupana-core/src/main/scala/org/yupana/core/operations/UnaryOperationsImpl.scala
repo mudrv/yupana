@@ -66,19 +66,20 @@ trait UnaryOperationsImpl extends UnaryOperations {
 
   private def tokenize(s: String): Array[String] = Tokenizer.transliteratedTokens(s).toArray
 
-  private def splitBy(s: String, p: Char => Boolean): Iterator[String] = new AbstractIterator[String] {
-    private val len = s.length
-    private var pos = 0
+  private def splitBy(s: String, p: Char => Boolean): Iterator[String] =
+    new AbstractIterator[String] {
+      private val len = s.length
+      private var pos = 0
 
-    override def hasNext: Boolean = pos < len
+      override def hasNext: Boolean = pos < len
 
-    override def next(): String = {
-      if (pos >= len) throw new NoSuchElementException("next on empty iterator")
-      val start = pos
-      while (pos < len && !p(s(pos))) pos += 1
-      val res = s.substring(start, pos min len)
-      while (pos < len && p(s(pos))) pos += 1
-      res
+      override def next(): String = {
+        if (pos >= len) throw new NoSuchElementException("next on empty iterator")
+        val start = pos
+        while (pos < len && !p(s(pos))) pos += 1
+        val res = s.substring(start, pos min len)
+        while (pos < len && p(s(pos))) pos += 1
+        res
+      }
     }
-  }
 }

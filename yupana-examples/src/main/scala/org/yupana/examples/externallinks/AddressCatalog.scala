@@ -40,11 +40,12 @@ trait AddressCatalog extends ExternalLink {
 object AddressCatalog extends AddressCatalog
 
 case class AddressData(city: String, lat: Double, lon: Double) {
-  def asMap: Map[String, Any] = Map(
-    AddressCatalog.CITY -> city,
-    AddressCatalog.LAT -> lat,
-    AddressCatalog.LON -> lon
-  )
+  def asMap: Map[String, Any] =
+    Map(
+      AddressCatalog.CITY -> city,
+      AddressCatalog.LAT -> lat,
+      AddressCatalog.LON -> lon
+    )
 }
 
 class AddressCatalogImpl(override val externalLink: AddressCatalog) extends ExternalLinkService[AddressCatalog] {

@@ -43,47 +43,53 @@ case class TypeOperations[T](
 }
 
 object TypeOperations {
-  def intOperations[T: Integral](dt: DataType.Aux[T]): TypeOperations[T] = TypeOperations(
-    BinaryOperation.integralOperations(dt),
-    UnaryOperation.numericOperations(dt),
-    Aggregation.intAggregations(dt),
-    Map.empty
-  )
+  def intOperations[T: Integral](dt: DataType.Aux[T]): TypeOperations[T] =
+    TypeOperations(
+      BinaryOperation.integralOperations(dt),
+      UnaryOperation.numericOperations(dt),
+      Aggregation.intAggregations(dt),
+      Map.empty
+    )
 
-  def fracOperations[T: Fractional](dt: DataType.Aux[T]): TypeOperations[T] = TypeOperations(
-    BinaryOperation.fractionalOperations(dt),
-    UnaryOperation.numericOperations(dt),
-    Aggregation.fracAggregations(dt),
-    Map.empty
-  )
+  def fracOperations[T: Fractional](dt: DataType.Aux[T]): TypeOperations[T] =
+    TypeOperations(
+      BinaryOperation.fractionalOperations(dt),
+      UnaryOperation.numericOperations(dt),
+      Aggregation.fracAggregations(dt),
+      Map.empty
+    )
 
-  def stringOperations(dt: DataType.Aux[String]): TypeOperations[String] = TypeOperations(
-    BinaryOperation.stringOperations,
-    UnaryOperation.stringOperations,
-    Aggregation.stringAggregations,
-    UnaryOperation.stringArrayOperations
-  )
+  def stringOperations(dt: DataType.Aux[String]): TypeOperations[String] =
+    TypeOperations(
+      BinaryOperation.stringOperations,
+      UnaryOperation.stringOperations,
+      Aggregation.stringAggregations,
+      UnaryOperation.stringArrayOperations
+    )
 
-  def boolOperations(dt: DataType.Aux[Boolean]): TypeOperations[Boolean] = TypeOperations(
-    Map.empty,
-    UnaryOperation.boolOperations,
-    Map.empty,
-    Map.empty
-  )
+  def boolOperations(dt: DataType.Aux[Boolean]): TypeOperations[Boolean] =
+    TypeOperations(
+      Map.empty,
+      UnaryOperation.boolOperations,
+      Map.empty,
+      Map.empty
+    )
 
-  def timeOperations(dt: DataType.Aux[Time]): TypeOperations[Time] = TypeOperations(
-    BinaryOperation.timeOperations,
-    UnaryOperation.timeOperations,
-    Aggregation.timeAggregations,
-    Map.empty
-  )
+  def timeOperations(dt: DataType.Aux[Time]): TypeOperations[Time] =
+    TypeOperations(
+      BinaryOperation.timeOperations,
+      UnaryOperation.timeOperations,
+      Aggregation.timeAggregations,
+      Map.empty
+    )
 
-  def periodOperations(dt: DataType.Aux[Period]): TypeOperations[Period] = TypeOperations(
-    BinaryOperation.periodOperations,
-    Map.empty,
-    Map.empty,
-    Map.empty
-  )
+  def periodOperations(dt: DataType.Aux[Period]): TypeOperations[Period] =
+    TypeOperations(
+      BinaryOperation.periodOperations,
+      Map.empty,
+      Map.empty,
+      Map.empty
+    )
 
   def tupleOperations[T, U](dtt: DataType.Aux[T], dtu: DataType.Aux[U]): TypeOperations[(T, U)] = {
 

@@ -128,23 +128,25 @@ object Aggregation {
     DISTINCT_RANDOM -> Aggregation.distinctRandom[Time]
   )
 
-  def intAggregations[T](dt: DataType.Aux[T])(implicit i: Integral[T]): Map[String, Aggregation[T]] = Map(
-    SUM -> Aggregation.sum[T](i, dt),
-    MAX -> Aggregation.max[T](i, dt),
-    MIN -> Aggregation.min[T](i, dt),
-    COUNT -> Aggregation.count[T],
-    DISTINCT_COUNT -> Aggregation.distinctCount[T],
-    DISTINCT_RANDOM -> Aggregation.distinctRandom[T](dt)
-  )
+  def intAggregations[T](dt: DataType.Aux[T])(implicit i: Integral[T]): Map[String, Aggregation[T]] =
+    Map(
+      SUM -> Aggregation.sum[T](i, dt),
+      MAX -> Aggregation.max[T](i, dt),
+      MIN -> Aggregation.min[T](i, dt),
+      COUNT -> Aggregation.count[T],
+      DISTINCT_COUNT -> Aggregation.distinctCount[T],
+      DISTINCT_RANDOM -> Aggregation.distinctRandom[T](dt)
+    )
 
-  def fracAggregations[T](dt: DataType.Aux[T])(implicit f: Fractional[T]): Map[String, Aggregation[T]] = Map(
-    SUM -> Aggregation.sum[T](f, dt),
-    MAX -> Aggregation.max[T](f, dt),
-    MIN -> Aggregation.min[T](f, dt),
-    COUNT -> Aggregation.count[T],
-    DISTINCT_COUNT -> Aggregation.distinctCount[T],
-    DISTINCT_RANDOM -> Aggregation.distinctRandom[T](dt)
-  )
+  def fracAggregations[T](dt: DataType.Aux[T])(implicit f: Fractional[T]): Map[String, Aggregation[T]] =
+    Map(
+      SUM -> Aggregation.sum[T](f, dt),
+      MAX -> Aggregation.max[T](f, dt),
+      MIN -> Aggregation.min[T](f, dt),
+      COUNT -> Aggregation.count[T],
+      DISTINCT_COUNT -> Aggregation.distinctCount[T],
+      DISTINCT_RANDOM -> Aggregation.distinctRandom[T](dt)
+    )
 }
 
 class AggregationImpl[T, I, O](

@@ -346,10 +346,11 @@ object SqlQueryProcessor extends QueryValidator {
       case None =>
         for {
           pair <- ExprPair.alignTypes(l, r).right
-          biOperation <- pair.dataType.operations
-            .biOperation(fun, pair.dataType)
-            .toRight(s"Unsupported operation $fun on ${l.dataType} and ${r.dataType}")
-            .right
+          biOperation <-
+            pair.dataType.operations
+              .biOperation(fun, pair.dataType)
+              .toRight(s"Unsupported operation $fun on ${l.dataType} and ${r.dataType}")
+              .right
         } yield {
           BinaryOperationExpr[pair.T, pair.T, biOperation.Out](biOperation, pair.a, pair.b).asInstanceOf[Expression]
         }

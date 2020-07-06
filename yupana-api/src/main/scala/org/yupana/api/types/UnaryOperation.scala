@@ -127,12 +127,13 @@ object UnaryOperation {
       fun: UnaryOperations => Option[T] => Option[U],
       n: String,
       dt: DataType.Aux[U]
-  ): UnaryOperation.Aux[T, U] = new UnaryOperation[T] {
-    override type Out = U
-    override val name: String = n
-    override def dataType: DataType.Aux[U] = dt
-    override def apply(t: Option[T])(implicit unaryOperations: UnaryOperations): Option[U] = fun(unaryOperations)(t)
-  }
+  ): UnaryOperation.Aux[T, U] =
+    new UnaryOperation[T] {
+      override type Out = U
+      override val name: String = n
+      override def dataType: DataType.Aux[U] = dt
+      override def apply(t: Option[T])(implicit unaryOperations: UnaryOperations): Option[U] = fun(unaryOperations)(t)
+    }
 
   val stringOperations: Map[String, UnaryOperation[String]] = Map(
     LENGTH -> length,
@@ -146,37 +147,40 @@ object UnaryOperation {
     NOT -> not
   )
 
-  def numericOperations[T](dt: DataType.Aux[T])(implicit n: Numeric[T]): Map[String, UnaryOperation[T]] = Map(
-    ABS -> abs(n, dt),
-    MINUS -> minus(n, dt)
-  )
+  def numericOperations[T](dt: DataType.Aux[T])(implicit n: Numeric[T]): Map[String, UnaryOperation[T]] =
+    Map(
+      ABS -> abs(n, dt),
+      MINUS -> minus(n, dt)
+    )
 
-  def timeOperations: Map[String, UnaryOperation[Time]] = Map(
-    YEAR -> truncYear,
-    MONTH -> truncMonth,
-    DAY -> truncDay,
-    HOUR -> truncHour,
-    MINUTE -> truncMinute,
-    SECOND -> truncSecond,
-    TRUNC_YEAR -> truncYear,
-    TRUNC_MONTH -> truncMonth,
-    TRUNC_WEEK -> truncWeek,
-    TRUNC_DAY -> truncDay,
-    TRUNC_HOUR -> truncHour,
-    TRUNC_MINUTE -> truncMinute,
-    TRUNC_SECOND -> truncSecond,
-    EXTRACT_YEAR -> extractYear,
-    EXTRACT_MONTH -> extractMonth,
-    EXTRACT_DAY -> extractDay,
-    EXTRACT_HOUR -> extractHour,
-    EXTRACT_MINUTE -> extractMinute,
-    EXTRACT_SECOND -> extractSecond
-  )
+  def timeOperations: Map[String, UnaryOperation[Time]] =
+    Map(
+      YEAR -> truncYear,
+      MONTH -> truncMonth,
+      DAY -> truncDay,
+      HOUR -> truncHour,
+      MINUTE -> truncMinute,
+      SECOND -> truncSecond,
+      TRUNC_YEAR -> truncYear,
+      TRUNC_MONTH -> truncMonth,
+      TRUNC_WEEK -> truncWeek,
+      TRUNC_DAY -> truncDay,
+      TRUNC_HOUR -> truncHour,
+      TRUNC_MINUTE -> truncMinute,
+      TRUNC_SECOND -> truncSecond,
+      EXTRACT_YEAR -> extractYear,
+      EXTRACT_MONTH -> extractMonth,
+      EXTRACT_DAY -> extractDay,
+      EXTRACT_HOUR -> extractHour,
+      EXTRACT_MINUTE -> extractMinute,
+      EXTRACT_SECOND -> extractSecond
+    )
 
-  def arrayOperations[T]: Map[String, UnaryOperation[Array[T]]] = Map(
-    ARRAY_TO_STRING -> arrayToString[T],
-    LENGTH -> arrayLength[T]
-  )
+  def arrayOperations[T]: Map[String, UnaryOperation[Array[T]]] =
+    Map(
+      ARRAY_TO_STRING -> arrayToString[T],
+      LENGTH -> arrayLength[T]
+    )
 
   val stringArrayOperations: Map[String, UnaryOperation[Array[String]]] = Map(
     TOKENS -> tokenizeArray

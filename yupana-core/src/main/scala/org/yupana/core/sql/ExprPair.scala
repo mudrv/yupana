@@ -28,11 +28,12 @@ trait ExprPair {
 }
 
 object ExprPair {
-  def apply[T0](x: Expression.Aux[T0], y: Expression.Aux[T0]): ExprPair = new ExprPair {
-    override type T = T0
-    override val a: Expression.Aux[T0] = x
-    override val b: Expression.Aux[T0] = y
-  }
+  def apply[T0](x: Expression.Aux[T0], y: Expression.Aux[T0]): ExprPair =
+    new ExprPair {
+      override type T = T0
+      override val a: Expression.Aux[T0] = x
+      override val b: Expression.Aux[T0] = y
+    }
 
   def constCast(const: ConstantExpr, dataType: DataType): Either[String, dataType.T] = {
     if (const.dataType == dataType) {

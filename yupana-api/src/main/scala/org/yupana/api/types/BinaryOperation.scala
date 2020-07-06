@@ -107,23 +107,25 @@ object BinaryOperation {
       fun: BinaryOperations => (A, B) => O,
       n: String,
       rt: DataType.Aux[O]
-  ): BinaryOperation.Aux[A, B, O] = new BinaryOperation[A] {
-    override type U = B
-    override type Out = O
-    override val dataType: DataType.Aux[O] = rt
-    override val infix: Boolean = !n.forall(_.isLetter)
-    override def apply(x: A, y: B)(implicit binaryOperations: BinaryOperations): O = fun(binaryOperations)(x, y)
-    override val name: String = n
-  }
+  ): BinaryOperation.Aux[A, B, O] =
+    new BinaryOperation[A] {
+      override type U = B
+      override type Out = O
+      override val dataType: DataType.Aux[O] = rt
+      override val infix: Boolean = !n.forall(_.isLetter)
+      override def apply(x: A, y: B)(implicit binaryOperations: BinaryOperations): O = fun(binaryOperations)(x, y)
+      override val name: String = n
+    }
 
-  def ordOperations[T: Ordering](dt: DataType.Aux[T]): Map[(String, String), BinaryOperation[T]] = Map(
-    entry(EQ, dt, BinaryOperation.equ),
-    entry(NE, dt, BinaryOperation.neq),
-    entry(LT, dt, BinaryOperation.lt),
-    entry(GT, dt, BinaryOperation.gt),
-    entry(LE, dt, BinaryOperation.le),
-    entry(GE, dt, BinaryOperation.ge)
-  )
+  def ordOperations[T: Ordering](dt: DataType.Aux[T]): Map[(String, String), BinaryOperation[T]] =
+    Map(
+      entry(EQ, dt, BinaryOperation.equ),
+      entry(NE, dt, BinaryOperation.neq),
+      entry(LT, dt, BinaryOperation.lt),
+      entry(GT, dt, BinaryOperation.gt),
+      entry(LE, dt, BinaryOperation.le),
+      entry(GE, dt, BinaryOperation.ge)
+    )
 
   def integralOperations[T: Integral](dt: DataType.Aux[T]): Map[(String, String), BinaryOperation[T]] =
     Map(
@@ -171,8 +173,8 @@ object BinaryOperation {
         override val name: String = ao.name
         override val infix: Boolean = ao.infix
 
-        override def apply(x: (A, B), y: (ao.U, bo.U))(
-            implicit binaryOperations: BinaryOperations
+        override def apply(x: (A, B), y: (ao.U, bo.U))(implicit
+            binaryOperations: BinaryOperations
         ): (ao.Out, bo.Out) = {
           (ao(x._1, y._1), bo(x._2, y._2))
         }
@@ -180,12 +182,13 @@ object BinaryOperation {
     }.toMap
   }
 
-  def arrayOperations[T](implicit dt: DataType.Aux[T]): Map[(String, String), BinaryOperation[Array[T]]] = Map(
-    entry(CONTAINS, DataType[T], contains),
-    entry(CONTAINS_ALL, DataType[Array[T]], containsAll),
-    entry(CONTAINS_ANY, DataType[Array[T]], containsAny),
-    entry(CONTAINS_SAME, DataType[Array[T]], containsSame)
-  )
+  def arrayOperations[T](implicit dt: DataType.Aux[T]): Map[(String, String), BinaryOperation[Array[T]]] =
+    Map(
+      entry(CONTAINS, DataType[T], contains),
+      entry(CONTAINS_ALL, DataType[Array[T]], containsAll),
+      entry(CONTAINS_ANY, DataType[Array[T]], containsAny),
+      entry(CONTAINS_SAME, DataType[Array[T]], containsSame)
+    )
 
   private def entry[T, U](
       name: String,

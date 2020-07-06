@@ -42,8 +42,8 @@ object FixedStorable {
   implicit val shortStorable: FixedStorable[Short] = of(jl.Short.BYTES, _.getShort, _.putShort)
   implicit val byteStorable: FixedStorable[Byte] = of(jl.Byte.BYTES, _.get, _.put)
   implicit val timeStorable: FixedStorable[Time] = wrap(longStorable, (l: Long) => new Time(l), _.millis)
-  implicit def tupleStorable[T, U](
-      implicit tStrable: FixedStorable[T],
+  implicit def tupleStorable[T, U](implicit
+      tStrable: FixedStorable[T],
       uStorable: FixedStorable[U]
   ): FixedStorable[(T, U)] = {
     of(
@@ -62,11 +62,12 @@ object FixedStorable {
       override def write(t: T): Array[Byte] = w(ByteBuffer.allocate(size))(t).array()
     }
 
-  def wrap[T, U](storable: FixedStorable[T], from: T => U, to: U => T): FixedStorable[U] = new FixedStorable[U] {
-    override val size: Int = storable.size
+  def wrap[T, U](storable: FixedStorable[T], from: T => U, to: U => T): FixedStorable[U] =
+    new FixedStorable[U] {
+      override val size: Int = storable.size
 
-    override def read(a: Array[Byte]): U = from(storable.read(a))
-    override def read(bb: ByteBuffer): U = from(storable.read(bb))
-    override def write(t: U): Array[Byte] = storable.write(to(t))
-  }
+      override def read(a: Array[Byte]): U = from(storable.read(a))
+      override def read(bb: ByteBuffer): U = from(storable.read(bb))
+      override def write(t: U): Array[Byte] = storable.write(to(t))
+    }
 }

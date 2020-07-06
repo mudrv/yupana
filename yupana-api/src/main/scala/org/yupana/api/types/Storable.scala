@@ -74,23 +74,26 @@ object Storable {
   implicit def arrayStorable[T](implicit rt: Storable[T], ct: ClassTag[T]): Storable[Array[T]] =
     of(readArray(rt), arrayToBytes(rt))
 
-  def of[T](r: ByteBuffer => T, w: T => Array[Byte]): Storable[T] = new Storable[T] {
-    override def read(a: Array[Byte]): T = r(ByteBuffer.wrap(a))
-    override def read(b: ByteBuffer): T = r(b)
-    override def write(t: T): Array[Byte] = w(t)
-  }
+  def of[T](r: ByteBuffer => T, w: T => Array[Byte]): Storable[T] =
+    new Storable[T] {
+      override def read(a: Array[Byte]): T = r(ByteBuffer.wrap(a))
+      override def read(b: ByteBuffer): T = r(b)
+      override def write(t: T): Array[Byte] = w(t)
+    }
 
-  def noop[T]: Storable[T] = new Storable[T] {
-    override def read(a: Array[Byte]): T = throw new IllegalStateException("This should not be read")
-    override def read(b: ByteBuffer): T = throw new IllegalStateException("This should not be read")
-    override def write(t: T): Array[Byte] = throw new IllegalStateException("This should not be written")
-  }
+  def noop[T]: Storable[T] =
+    new Storable[T] {
+      override def read(a: Array[Byte]): T = throw new IllegalStateException("This should not be read")
+      override def read(b: ByteBuffer): T = throw new IllegalStateException("This should not be read")
+      override def write(t: T): Array[Byte] = throw new IllegalStateException("This should not be written")
+    }
 
-  def wrap[T, U](storable: Storable[T], from: T => U, to: U => T): Storable[U] = new Storable[U] {
-    override def read(a: Array[Byte]): U = from(storable.read(a))
-    override def read(bb: ByteBuffer): U = from(storable.read(bb))
-    override def write(t: U): Array[Byte] = storable.write(to(t))
-  }
+  def wrap[T, U](storable: Storable[T], from: T => U, to: U => T): Storable[U] =
+    new Storable[U] {
+      override def read(a: Array[Byte]): U = from(storable.read(a))
+      override def read(bb: ByteBuffer): U = from(storable.read(bb))
+      override def write(t: U): Array[Byte] = storable.write(to(t))
+    }
 
   private def readBigDecimal(bb: ByteBuffer): JavaBigDecimal = {
     val scale = readVInt(bb)
@@ -208,7 +211,7 @@ object Storable {
 
       (len - 1 to 0 by -1) foreach { idx =>
         val shift = idx * 8
-        val mask = 0xFFL << shift
+        val mask = 0xffL << shift
         bb.put(((ll & mask) >> shift).toByte)
       }
 

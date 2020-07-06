@@ -87,15 +87,16 @@ abstract class TsdbSparkBase(
 
   override val dao: TSReadingDao[RDD, Long] = new TsDaoHBaseSpark(sparkContext, conf, dictionaryProvider)
 
-  private def getMetricsDao(): TsdbQueryMetricsDao = TsdbSparkBase.metricsDao match {
-    case None =>
-      logger.info("TsdbQueryMetricsDao initialization...")
-      val hbaseConnection = ConnectionFactory.createConnection(TsdbSparkBase.hbaseConfiguration(conf))
-      val dao = new TsdbQueryMetricsDaoHBase(hbaseConnection, conf.hbaseNamespace)
-      TsdbSparkBase.metricsDao = Some(dao)
-      dao
-    case Some(d) => d
-  }
+  private def getMetricsDao(): TsdbQueryMetricsDao =
+    TsdbSparkBase.metricsDao match {
+      case None =>
+        logger.info("TsdbQueryMetricsDao initialization...")
+        val hbaseConnection = ConnectionFactory.createConnection(TsdbSparkBase.hbaseConfiguration(conf))
+        val dao = new TsdbQueryMetricsDaoHBase(hbaseConnection, conf.hbaseNamespace)
+        TsdbSparkBase.metricsDao = Some(dao)
+        dao
+      case Some(d) => d
+    }
 
   override def createMetricCollector(query: Query): MetricQueryCollector = {
     if (conf.collectMetrics) {

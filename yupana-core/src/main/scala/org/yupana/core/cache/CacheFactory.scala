@@ -84,11 +84,12 @@ object CacheFactory extends StrictLogging {
     } else logger.info("CacheUtils already initialized")
   }
 
-  def initCache[K, V](description: CacheDescription.Aux[K, V]): Cache[K, V] = synchronized {
-    if (properties == null) throw new IllegalStateException("CacheUtils was not initialized")
-    logger.debug(s"Initialize cache ${description.name}")
-    getFactory(description).initCache(description)
-  }
+  def initCache[K, V](description: CacheDescription.Aux[K, V]): Cache[K, V] =
+    synchronized {
+      if (properties == null) throw new IllegalStateException("CacheUtils was not initialized")
+      logger.debug(s"Initialize cache ${description.name}")
+      getFactory(description).initCache(description)
+    }
 
   def initCache[K: BoxingTag, V: BoxingTag](name: String): Cache[K, V] = {
     initCache(createDescription[K, V](name))

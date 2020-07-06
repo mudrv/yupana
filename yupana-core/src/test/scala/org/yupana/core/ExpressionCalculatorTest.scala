@@ -50,7 +50,12 @@ class ExpressionCalculatorTest extends WordSpecLike with Matchers with OptionVal
         Seq.empty,
         Array.empty
       )
-      ExpressionCalculator.evaluateExpression(TimeExpr, queryContext, new InternalRow(Array.empty), tryEval = true) shouldBe None
+      ExpressionCalculator.evaluateExpression(
+        TimeExpr,
+        queryContext,
+        new InternalRow(Array.empty),
+        tryEval = true
+      ) shouldBe None
       ExpressionCalculator.evaluateExpression(
         DimensionExpr(RawDimension[Int]("anyDim")),
         queryContext,

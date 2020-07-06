@@ -58,8 +58,7 @@ object TypeConverter {
   val byte2BigDecimal: TypeConverter[Byte, BigDecimal] =
     of(x => BigDecimal(x), x => if (x.isValidByte) Some(x.toByte) else None)
 
-  def of[T, U](f: T => U, rev: U => Option[T])(
-      implicit
+  def of[T, U](f: T => U, rev: U => Option[T])(implicit
       rtt: DataType.Aux[T],
       rtu: DataType.Aux[U]
   ): TypeConverter[T, U] = {
@@ -71,8 +70,7 @@ object TypeConverter {
     )
   }
 
-  private def entry[T, U](tc: TypeConverter[T, U])(
-      implicit
+  private def entry[T, U](tc: TypeConverter[T, U])(implicit
       dtt: DataType.Aux[T],
       dtu: DataType.Aux[U]
   ): ((String, String), TypeConverter[T, U]) = {

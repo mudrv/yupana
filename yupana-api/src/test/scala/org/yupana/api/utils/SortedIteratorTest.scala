@@ -31,10 +31,15 @@ class SortedIteratorTest extends FlatSpec with Matchers with ScalaCheckDrivenPro
     SortedSetIterator[Long](1).union(SortedSetIterator[Long](1)).toList shouldBe List[Long](1)
     SortedSetIterator[Long](1, 2, 3).union(SortedSetIterator[Long](1)).toList shouldBe List[Long](1, 2, 3)
     SortedSetIterator[Long](1).union(SortedSetIterator[Long](1, 2, 3, 4)).toList shouldBe List[Long](1, 2, 3, 4)
-    SortedSetIterator[Long](1, 1, 1, 5, 5,
-      5).union(SortedSetIterator[Long](1, 2, 4)).toList shouldBe List[Long](1, 2, 4, 5)
-    SortedSetIterator[Long](1, 1, 1, 5, 5,
-      5).union(SortedSetIterator[Long](1, 2, 4, 5, 5, 5)).toList shouldBe List[Long](1, 2, 4, 5)
+    SortedSetIterator[Long](1, 1, 1, 5, 5, 5).union(SortedSetIterator[Long](1, 2, 4)).toList shouldBe List[Long](
+      1,
+      2,
+      4,
+      5
+    )
+    SortedSetIterator[Long](1, 1, 1, 5, 5, 5)
+      .union(SortedSetIterator[Long](1, 2, 4, 5, 5, 5))
+      .toList shouldBe List[Long](1, 2, 4, 5)
   }
 
   it should "union any sorted iterators" in {

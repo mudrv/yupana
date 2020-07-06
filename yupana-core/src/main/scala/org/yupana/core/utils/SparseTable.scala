@@ -41,9 +41,10 @@ class SparseTable[R, C, +V](val values: Map[R, Map[C, V]]) extends Table[R, C, V
 
   override def get(row: R, column: C): Option[V] = values.get(row).flatMap(_.get(column))
   override def row(r: R): Map[C, V] = values.getOrElse(r, Map.empty)
-  override def column(c: C): Map[R, V] = values.flatMap {
-    case (rowKey, rowValues) => rowValues.get(c).map(rowKey -> _)
-  }
+  override def column(c: C): Map[R, V] =
+    values.flatMap {
+      case (rowKey, rowValues) => rowValues.get(c).map(rowKey -> _)
+    }
 
   override def transpose[V1 >: V]: SparseTable[C, R, V1] = {
     val transposed = values.foldLeft(Map.empty[C, Map[R, V]]) {
@@ -99,7 +100,8 @@ object SparseTable extends TableFactory[SparseTable] {
         case (m, (r, c, v)) =>
           val col = m.getOrElse(r, Map.empty)
           m + (r -> (col + (c -> v)))
-      }, {
+      },
+      {
         case (a, b) =>
           val ks = a.keySet ++ b.keySet
           ks.map { k =>

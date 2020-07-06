@@ -36,10 +36,11 @@ trait ExternalLink extends Serializable {
 
   override def hashCode(): Int = linkName.hashCode
 
-  override def equals(obj: Any): Boolean = obj match {
-    case that: ExternalLink => this.linkName == that.linkName
-    case _                  => false
-  }
+  override def equals(obj: Any): Boolean =
+    obj match {
+      case that: ExternalLink => this.linkName == that.linkName
+      case _                  => false
+    }
 
   override def toString: String = s"ExternalLink($linkName)"
 }

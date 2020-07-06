@@ -40,9 +40,10 @@ object ValueParser {
 
   def longNumber[_: P]: P[Long] = P(digits).map(_.toLong)
 
-  def number[_: P]: P[BigDecimal] = P(digits ~ ("." ~ digits).!.?).map {
-    case (x, y) => BigDecimal(x + y.getOrElse(""))
-  }
+  def number[_: P]: P[BigDecimal] =
+    P(digits ~ ("." ~ digits).!.?).map {
+      case (x, y) => BigDecimal(x + y.getOrElse(""))
+    }
 
   private def stringCharacter[_: P] = CharPred(c => c != '\'' && CharPredicates.isPrintableChar(c)).!
   private def escapedCharacter[_: P] = P("\\" ~/ CharIn("'\\\\").!)
@@ -67,15 +68,17 @@ object ValueParser {
   def time[_: P]: P[(Int, Int, Int, Int)] =
     P(hours ~ ":" ~ minutes ~ ":" ~ minutes ~ ("." ~ millis).?.map(_.getOrElse(0)))
 
-  def dateAndTime[_: P]: P[LocalDateTime] = P(date ~/ (" " ~ time).?).map {
-    case (y, m, d, None)                  => new LocalDateTime(y, m, d, 0, 0, 0, 0)
-    case (y, m, d, Some((h, mm, ss, ms))) => new LocalDateTime(y, m, d, h, mm, ss, ms)
-  }
+  def dateAndTime[_: P]: P[LocalDateTime] =
+    P(date ~/ (" " ~ time).?).map {
+      case (y, m, d, None)                  => new LocalDateTime(y, m, d, 0, 0, 0, 0)
+      case (y, m, d, Some((h, mm, ss, ms))) => new LocalDateTime(y, m, d, h, mm, ss, ms)
+    }
 
-  def duration[_: P]: P[Period] = P("'" ~ (intNumber ~ " ").? ~ time ~ "'").map {
-    case (d, (h, m, s, ms)) =>
-      new Period(0, 0, 0, d.getOrElse(0), h, m, s, ms)
-  }
+  def duration[_: P]: P[Period] =
+    P("'" ~ (intNumber ~ " ").? ~ time ~ "'").map {
+      case (d, (h, m, s, ms)) =>
+        new Period(0, 0, 0, d.getOrElse(0), h, m, s, ms)
+    }
 
   private def pgTimestamp[_: P]: P[LocalDateTime] = {
     P(timestampWord ~/ wsp ~ "'" ~ dateAndTime ~ "'")
@@ -88,21 +91,22 @@ object ValueParser {
   def stringValue[_: P]: P[StringValue] = P(string).map(StringValue)
   def timestampValue[_: P]: P[TimestampValue] = P(pgTimestamp | msTimestamp).map(TimestampValue.apply)
 
-  def INTERVAL_PARTS[_: P]: List[IntervalPart] = List(
-    IntervalPart(
-      "SECOND",
-      () =>
-        (intNumber ~ ("." ~ millis).?).map {
-          case (s, ms) => Period.seconds(s).plusMillis(ms.getOrElse(0))
-        },
-      () => P("")
-    ),
-    IntervalPart("MINUTE", () => intNumber.map(Period.minutes), () => P(":")),
-    IntervalPart("HOUR", () => intNumber.map(Period.hours), () => P(":")),
-    IntervalPart("DAY", () => intNumber.map(Period.days), () => P(" ")),
-    IntervalPart("MONTH", () => intNumber.map(Period.months), () => P("-")),
-    IntervalPart("YEAR", () => intNumber.map(Period.years), () => P("-"))
-  )
+  def INTERVAL_PARTS[_: P]: List[IntervalPart] =
+    List(
+      IntervalPart(
+        "SECOND",
+        () =>
+          (intNumber ~ ("." ~ millis).?).map {
+            case (s, ms) => Period.seconds(s).plusMillis(ms.getOrElse(0))
+          },
+        () => P("")
+      ),
+      IntervalPart("MINUTE", () => intNumber.map(Period.minutes), () => P(":")),
+      IntervalPart("HOUR", () => intNumber.map(Period.hours), () => P(":")),
+      IntervalPart("DAY", () => intNumber.map(Period.days), () => P(" ")),
+      IntervalPart("MONTH", () => intNumber.map(Period.months), () => P("-")),
+      IntervalPart("YEAR", () => intNumber.map(Period.years), () => P("-"))
+    )
 
   def singleFieldDuration[_: P]: P[Period] = {
     val variants = INTERVAL_PARTS.tails.flatMap(_.inits).toList

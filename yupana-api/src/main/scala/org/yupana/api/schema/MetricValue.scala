@@ -38,8 +38,9 @@ trait MetricValue {
 }
 
 object MetricValue {
-  def apply[T](m: Metric.Aux[T], v: T): MetricValue = new MetricValue {
-    val metric: Metric.Aux[T] = m
-    val value: T = v
-  }
+  def apply[T](m: Metric.Aux[T], v: T): MetricValue =
+    new MetricValue {
+      val metric: Metric.Aux[T] = m
+      val value: T = v
+    }
 }

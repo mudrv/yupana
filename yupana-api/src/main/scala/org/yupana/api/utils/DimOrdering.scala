@@ -50,11 +50,12 @@ object DimOrdering {
     }
   }
 
-  def fromCmp[T](cmp: (T, T) => Int): DimOrdering[T] = new DimOrdering[T] {
-    override def lt(x: T, y: T): Boolean = cmp(x, y) < 0
-    override def gt(x: T, y: T): Boolean = cmp(x, y) > 0
+  def fromCmp[T](cmp: (T, T) => Int): DimOrdering[T] =
+    new DimOrdering[T] {
+      override def lt(x: T, y: T): Boolean = cmp(x, y) < 0
+      override def gt(x: T, y: T): Boolean = cmp(x, y) > 0
 
-    override def max(a: T, b: T): T = if (gte(a, b)) a else b
-    override def min(a: T, b: T): T = if (lte(a, b)) a else b
-  }
+      override def max(a: T, b: T): T = if (gte(a, b)) a else b
+      override def min(a: T, b: T): T = if (lte(a, b)) a else b
+    }
 }

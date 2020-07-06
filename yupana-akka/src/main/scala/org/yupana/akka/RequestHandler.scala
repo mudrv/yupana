@@ -34,8 +34,8 @@ class RequestHandler(schema: Schema) extends StrictLogging {
   private val sqlQueryProcessor = new SqlQueryProcessor(schema)
   private val metadataProvider = new JdbcMetadataProvider(schema)
 
-  def handleQuery(tsdb: TSDB, sqlQuery: proto.SqlQuery)(
-      implicit ec: ExecutionContext
+  def handleQuery(tsdb: TSDB, sqlQuery: proto.SqlQuery)(implicit
+      ec: ExecutionContext
   ): Future[Either[String, Iterator[proto.Response]]] = {
 
     logger.debug(s"""Processing SQL query: "${sqlQuery.sql}"; parameters: ${sqlQuery.parameters}""")
@@ -72,8 +72,8 @@ class RequestHandler(schema: Schema) extends StrictLogging {
     }
   }
 
-  def handleBatchQuery(tsdb: TSDB, batchSqlQuery: proto.BatchSqlQuery)(
-      implicit ec: ExecutionContext
+  def handleBatchQuery(tsdb: TSDB, batchSqlQuery: proto.BatchSqlQuery)(implicit
+      ec: ExecutionContext
   ): Future[Either[String, Iterator[proto.Response]]] = {
     logger.debug(s"Processing batch SQL ${batchSqlQuery.sql} with ${batchSqlQuery.batch.size}")
 

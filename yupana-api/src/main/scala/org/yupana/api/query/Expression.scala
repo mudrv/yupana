@@ -83,11 +83,12 @@ sealed trait WindowFunctionExpr extends Expression {
 }
 
 object WindowFunctionExpr {
-  def apply[T](op: WindowOperation[T], e: Expression.Aux[T]): WindowFunctionExpr = new WindowFunctionExpr {
-    override type In = T
-    override val operation: WindowOperation[T] = op
-    override val expr: Expression.Aux[T] = e
-  }
+  def apply[T](op: WindowOperation[T], e: Expression.Aux[T]): WindowFunctionExpr =
+    new WindowFunctionExpr {
+      override type In = T
+      override val operation: WindowOperation[T] = op
+      override val expr: Expression.Aux[T] = e
+    }
   def unapply(arg: WindowFunctionExpr): Option[(WindowOperation[arg.In], Expression.Aux[arg.In])] = {
     Some((arg.operation, arg.expr))
   }
@@ -111,14 +112,15 @@ sealed trait AggregateExpr extends Expression {
 }
 
 object AggregateExpr {
-  def apply[T](a: Aggregation[T], e: Expression.Aux[T]): Expression.Aux[a.Out] = new AggregateExpr {
-    override type In = T
-    override type Out = a.Out
-    override def dataType: DataType.Aux[Out] = a.dataType
+  def apply[T](a: Aggregation[T], e: Expression.Aux[T]): Expression.Aux[a.Out] =
+    new AggregateExpr {
+      override type In = T
+      override type Out = a.Out
+      override def dataType: DataType.Aux[Out] = a.dataType
 
-    override val aggregation: Aggregation[T] = a
-    override val expr: Expression.Aux[T] = e
-  }
+      override val aggregation: Aggregation[T] = a
+      override val expr: Expression.Aux[T] = e
+    }
 
   def unapply(arg: AggregateExpr): Option[(Aggregation[arg.In], Expression.Aux[arg.In])] = {
     Some((arg.aggregation, arg.expr))
@@ -136,11 +138,12 @@ sealed trait ConstantExpr extends Expression {
 object ConstantExpr {
   type Aux[T] = ConstantExpr { type Out = T }
 
-  def apply[T](value: T)(implicit rt: DataType.Aux[T]): ConstantExpr.Aux[T] = new ConstantExpr {
-    override type Out = T
-    override val v: T = value
-    override def dataType: DataType.Aux[T] = rt
-  }
+  def apply[T](value: T)(implicit rt: DataType.Aux[T]): ConstantExpr.Aux[T] =
+    new ConstantExpr {
+      override type Out = T
+      override val v: T = value
+      override def dataType: DataType.Aux[T] = rt
+    }
 
   def unapply(c: ConstantExpr): Option[c.Out] = Some(c.v)
 }
@@ -264,8 +267,8 @@ case class BinaryOperationExpr[T, U, O](
   override def kind: ExprKind = ExprKind.combine(a.kind, b.kind)
 }
 
-case class TupleExpr[T, U](e1: Expression.Aux[T], e2: Expression.Aux[U])(
-    implicit rtt: DataType.Aux[T],
+case class TupleExpr[T, U](e1: Expression.Aux[T], e2: Expression.Aux[U])(implicit
+    rtt: DataType.Aux[T],
     rtu: DataType.Aux[U]
 ) extends Expression {
   override type Out = (T, U)
@@ -359,11 +362,12 @@ trait InExpr extends Expression {
 }
 
 object InExpr {
-  def apply[T0](e: Expression.Aux[T0], vs: Set[T0]): Condition = new InExpr {
-    override type T = T0
-    override val expr: Expression.Aux[T] = e
-    override val values: Set[T] = vs
-  }
+  def apply[T0](e: Expression.Aux[T0], vs: Set[T0]): Condition =
+    new InExpr {
+      override type T = T0
+      override val expr: Expression.Aux[T] = e
+      override val values: Set[T] = vs
+    }
 
   def unapply(i: InExpr): Option[(Expression.Aux[i.T], Set[i.T])] = Some((i.expr, i.values))
 }

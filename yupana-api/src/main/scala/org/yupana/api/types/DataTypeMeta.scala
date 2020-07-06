@@ -80,13 +80,14 @@ object DataTypeMeta {
   def apply[T](t: Int, ds: Int, tn: String, jt: Class[_], p: Int, s: Int): DataTypeMeta[T] =
     DataTypeMeta(t, ds, tn, jt.getCanonicalName, p, SIGNED_TYPES.contains(t), s)
 
-  def tuple[T, U](implicit tMeta: DataTypeMeta[T], uMeta: DataTypeMeta[U]): DataTypeMeta[(T, U)] = DataTypeMeta(
-    Types.OTHER,
-    tMeta.displaySize + uMeta.displaySize,
-    s"${tMeta.sqlTypeName}_${uMeta.sqlTypeName}",
-    classOf[(T, U)].getCanonicalName,
-    tMeta.precision + uMeta.precision,
-    isSigned = false,
-    0
-  )
+  def tuple[T, U](implicit tMeta: DataTypeMeta[T], uMeta: DataTypeMeta[U]): DataTypeMeta[(T, U)] =
+    DataTypeMeta(
+      Types.OTHER,
+      tMeta.displaySize + uMeta.displaySize,
+      s"${tMeta.sqlTypeName}_${uMeta.sqlTypeName}",
+      classOf[(T, U)].getCanonicalName,
+      tMeta.precision + uMeta.precision,
+      isSigned = false,
+      0
+    )
 }

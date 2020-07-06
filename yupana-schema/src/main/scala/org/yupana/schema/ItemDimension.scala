@@ -27,10 +27,13 @@ object ItemDimension {
   type KeyType = (Int, Long)
 
   def apply(name: String): HashDimension[String, KeyType] = {
-    HashDimension(name, (s: String) => {
-      val sl = s.toLowerCase
-      (hash(sl), UUID.nameUUIDFromBytes(sl.getBytes(StandardCharsets.UTF_8)).getMostSignificantBits)
-    })
+    HashDimension(
+      name,
+      (s: String) => {
+        val sl = s.toLowerCase
+        (hash(sl), UUID.nameUUIDFromBytes(sl.getBytes(StandardCharsets.UTF_8)).getMostSignificantBits)
+      }
+    )
   }
 
   val stopWords: Set[String] = Set("kg", "ml", "lit", "litr", "gr", "sht")

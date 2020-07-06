@@ -309,7 +309,10 @@ class SqlQueryProcessorTest extends FlatSpec with Matchers with Inside with Opti
       q.table.value.name shouldEqual "test_table"
       q.fields should contain theSameElementsInOrderAs List(
         dimension(DIM_A) as "a",
-        function(UnaryOperation.arrayToString[String], function(UnaryOperation.tokens, dimension(DIM_A))) as "array_to_string(tokens(a))"
+        function(
+          UnaryOperation.arrayToString[String],
+          function(UnaryOperation.tokens, dimension(DIM_A))
+        ) as "array_to_string(tokens(a))"
       )
       q.filter.value shouldBe and(
         ge(time, const(Time(new DateTime(2019, 3, 14, 0, 0, DateTimeZone.UTC)))),
@@ -530,7 +533,10 @@ class SqlQueryProcessorTest extends FlatSpec with Matchers with Inside with Opti
       q.table.value.name shouldEqual "test_table"
       q.fields should contain theSameElementsInOrderAs List(
         dimension(DIM_A) as "a",
-        function(UnaryOperation.arrayToString[String], function(UnaryOperation.tokens, dimension(DIM_A))) as "array_to_string(tokens(a))",
+        function(
+          UnaryOperation.arrayToString[String],
+          function(UnaryOperation.tokens, dimension(DIM_A))
+        ) as "array_to_string(tokens(a))",
         bi(
           BinaryOperation.containsAny[String],
           function(UnaryOperation.tokens, dimension(DIM_A)),
@@ -782,9 +788,9 @@ class SqlQueryProcessorTest extends FlatSpec with Matchers with Inside with Opti
         case AndExpr(Seq(from, to)) =>
           inside(from) {
             case BinaryOperationExpr(
-                cmp,
-                te,
-                UnaryOperationExpr(uo, BinaryOperationExpr(op, ConstantExpr(t), ConstantExpr(p)))
+                  cmp,
+                  te,
+                  UnaryOperationExpr(uo, BinaryOperationExpr(op, ConstantExpr(t), ConstantExpr(p)))
                 ) =>
               cmp.name shouldEqual BinaryOperation.ge[Time].name
               te shouldEqual TimeExpr

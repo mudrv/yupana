@@ -65,14 +65,15 @@ case class DictionaryDimension(override val name: String, hashFunction: Option[S
 
   override def hashCode(): Int = name.hashCode
 
-  override def equals(obj: Any): Boolean = obj match {
-    case DictionaryDimension(n, _) => name == n
-    case _                         => false
-  }
+  override def equals(obj: Any): Boolean =
+    obj match {
+      case DictionaryDimension(n, _) => name == n
+      case _                         => false
+    }
 }
 
-case class RawDimension[TT](override val name: String)(
-    implicit val rStorable: FixedStorable[TT],
+case class RawDimension[TT](override val name: String)(implicit
+    val rStorable: FixedStorable[TT],
     val rOrdering: DimOrdering[TT],
     val rCt: ClassTag[TT],
     dt: DataType.Aux[TT]
@@ -86,10 +87,11 @@ case class RawDimension[TT](override val name: String)(
 
   override def hashCode(): Int = name.hashCode
 
-  override def equals(obj: Any): Boolean = obj match {
-    case RawDimension(n) => name == n
-    case _               => false
-  }
+  override def equals(obj: Any): Boolean =
+    obj match {
+      case RawDimension(n) => name == n
+      case _               => false
+    }
 
   override def toString: String = s"RawDimension($name)"
 }
@@ -110,10 +112,11 @@ case class HashDimension[TT, RR](override val name: String, hashFunction: TT => 
 
   override def hashCode(): Int = name.hashCode
 
-  override def equals(obj: Any): Boolean = obj match {
-    case HashDimension(n, _) => name == n
-    case _                   => false
-  }
+  override def equals(obj: Any): Boolean =
+    obj match {
+      case HashDimension(n, _) => name == n
+      case _                   => false
+    }
 
   override def toString: String = s"HashDimension($name)"
 }

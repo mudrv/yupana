@@ -105,13 +105,15 @@ object QueryContext extends StrictLogging {
     }.flatten
   }
 
-  private def containsAggregates(e: Expression): Boolean = e.flatten.exists {
-    case _: AggregateExpr => true
-    case _                => false
-  }
+  private def containsAggregates(e: Expression): Boolean =
+    e.flatten.exists {
+      case _: AggregateExpr => true
+      case _                => false
+    }
 
-  private def containsWindows(e: Expression): Boolean = e.flatten.exists {
-    case _: WindowFunctionExpr => true
-    case _                     => false
-  }
+  private def containsWindows(e: Expression): Boolean =
+    e.flatten.exists {
+      case _: WindowFunctionExpr => true
+      case _                     => false
+    }
 }

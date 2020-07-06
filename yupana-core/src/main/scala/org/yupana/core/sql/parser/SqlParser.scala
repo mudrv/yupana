@@ -89,9 +89,10 @@ object SqlParser {
 
   def alias[_: P]: P[String] = P(CharsWhileIn(" \t\n", 1) ~~ asWord.? ~ notKeyword)
 
-  def functionCallExpr[_: P]: P[FunctionCall] = P(name ~ "(" ~ expr.rep(sep = ",") ~ ")").map {
-    case (f, vs) => FunctionCall(f.toLowerCase, vs.toList)
-  }
+  def functionCallExpr[_: P]: P[FunctionCall] =
+    P(name ~ "(" ~ expr.rep(sep = ",") ~ ")").map {
+      case (f, vs) => FunctionCall(f.toLowerCase, vs.toList)
+    }
 
   def fieldNameExpr[_: P]: P[FieldName] = P(fieldWithSchema).map(FieldName)
 
@@ -126,15 +127,16 @@ object SqlParser {
   def fieldList[_: P]: P[SqlFieldList] = P(field.rep(min = 1, sep = ",")).map(SqlFieldList)
   def allFields[_: P]: P[SqlFieldsAll.type] = P(asterisk).map(_ => SqlFieldsAll)
 
-  def op[_: P]: P[(SqlExpr, SqlExpr) => Comparison] = P(
-    P("=").map(_ => Eq) |
-      P("<>").map(_ => Ne) |
-      P("!=").map(_ => Ne) |
-      P(">=").map(_ => Ge) |
-      P(">").map(_ => Gt) |
-      P("<=").map(_ => Le) |
-      P("<").map(_ => Lt)
-  )
+  def op[_: P]: P[(SqlExpr, SqlExpr) => Comparison] =
+    P(
+      P("=").map(_ => Eq) |
+        P("<>").map(_ => Ne) |
+        P("!=").map(_ => Ne) |
+        P(">=").map(_ => Ge) |
+        P(">").map(_ => Gt) |
+        P("<=").map(_ => Le) |
+        P("<").map(_ => Lt)
+    )
 
   def callOrField[_: P]: P[SqlExpr] = functionCallExpr | fieldNameExpr
 
@@ -150,20 +152,23 @@ object SqlParser {
 
   def isNotNull[_: P]: P[SqlExpr => Condition] = P(isWord ~ notWord ~ nullWord).map(_ => IsNotNull)
 
-  def condition[_: P]: P[Condition] = P(logicalTerm ~ (orWord ~/ logicalTerm).rep).map {
-    case (x, y) if y.nonEmpty => Or(x +: y)
-    case (x, _)               => x
-  }
+  def condition[_: P]: P[Condition] =
+    P(logicalTerm ~ (orWord ~/ logicalTerm).rep).map {
+      case (x, y) if y.nonEmpty => Or(x +: y)
+      case (x, _)               => x
+    }
 
-  def logicalTerm[_: P]: P[Condition] = P(logicalFactor ~ (andWord ~/ logicalFactor).rep).map {
-    case (x, y) if y.nonEmpty => And(x +: y)
-    case (x, _)               => x
-  }
+  def logicalTerm[_: P]: P[Condition] =
+    P(logicalFactor ~ (andWord ~/ logicalFactor).rep).map {
+      case (x, y) if y.nonEmpty => And(x +: y)
+      case (x, _)               => x
+    }
 
-  def boolExpr[_: P]: P[Condition] = P(expr ~ (comparison | in | notIn | isNull | isNotNull).?).map {
-    case (e, Some(f)) => f(e)
-    case (e, None)    => ExprCondition(e)
-  }
+  def boolExpr[_: P]: P[Condition] =
+    P(expr ~ (comparison | in | notIn | isNull | isNotNull).?).map {
+      case (e, Some(f)) => f(e)
+      case (e, None)    => ExprCondition(e)
+    }
 
   def logicalFactor[_: P]: P[Condition] = P(boolExpr | ("(" ~ condition ~ ")"))
 
@@ -233,9 +238,10 @@ object SqlParser {
     P(queryIdWord ~ "=" ~/ ValueParser.string).map(queryId => MetricsFilter(queryId = Some(queryId)))
   def metricStateFilter[_: P]: P[MetricsFilter] =
     P(stateWord ~ "=" ~/ ValueParser.string).map(state => MetricsFilter(state = Some(state)))
-  def queryMetricsFilter[_: P]: P[MetricsFilter] = P(
-    whereWord ~ (metricQueryIdFilter | metricStateFilter)
-  )
+  def queryMetricsFilter[_: P]: P[MetricsFilter] =
+    P(
+      whereWord ~ (metricQueryIdFilter | metricStateFilter)
+    )
 
   def queries[_: P]: P[ShowQueryMetrics] =
     P(queriesWord ~/ queryMetricsFilter.? ~/ limit.?).map(ShowQueryMetrics.tupled)

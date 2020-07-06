@@ -46,18 +46,18 @@ class Table(
     val tagFields = Array.fill[Option[Either[Metric, Dimension]]](255)(None)
 
     metrics.foreach { m =>
-      tagFields(m.tag & 0xFF) = Some(Left(m))
+      tagFields(m.tag & 0xff) = Some(Left(m))
     }
 
     dimensionSeq.foreach { dim =>
-      tagFields(dimensionTag(dim) & 0xFF) = Some(Right(dim))
+      tagFields(dimensionTag(dim) & 0xff) = Some(Right(dim))
     }
 
     tagFields
   }
 
   @inline
-  final def fieldForTag(tag: Byte): Option[Either[Metric, Dimension]] = tagFields(tag & 0xFF)
+  final def fieldForTag(tag: Byte): Option[Either[Metric, Dimension]] = tagFields(tag & 0xff)
 
   @inline
   def dimensionTag(dimension: Dimension): Byte = {

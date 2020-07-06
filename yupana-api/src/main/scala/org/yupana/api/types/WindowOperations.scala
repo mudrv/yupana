@@ -53,13 +53,14 @@ object WindowOperation {
       n: String,
       f: WindowOperations => (Array[Option[T]], Int) => Option[V],
       dt: DataType.Aux[V]
-  ): Aux[T, V] = new WindowOperation[T] {
-    override type Out = V
-    override val name: String = n
-    override def apply(values: Array[Option[T]], index: Int)(implicit wo: WindowOperations): Option[V] =
-      f(wo)(values, index)
-    override val dataType: DataType.Aux[V] = dt
-  }
+  ): Aux[T, V] =
+    new WindowOperation[T] {
+      override type Out = V
+      override val name: String = n
+      override def apply(values: Array[Option[T]], index: Int)(implicit wo: WindowOperations): Option[V] =
+        f(wo)(values, index)
+      override val dataType: DataType.Aux[V] = dt
+    }
 
 }
 
@@ -81,9 +82,10 @@ object TypeWindowOperations {
   def apply[T: DataType.Aux](ops: (String, WindowOperation[T])*): TypeWindowOperations[T] =
     TypeWindowOperations[T](Map(ops: _*))
 
-  implicit def typeIndependence[T: DataType.Aux]: TypeWindowOperations[T] = TypeWindowOperations(
-    LAG -> WindowOperation.lag
-  )
+  implicit def typeIndependence[T: DataType.Aux]: TypeWindowOperations[T] =
+    TypeWindowOperations(
+      LAG -> WindowOperation.lag
+    )
 }
 
 trait WindowOperations {

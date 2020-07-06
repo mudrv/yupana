@@ -120,18 +120,18 @@ object DataType {
     new ArrayDataType(dtt).aux
   }
 
-  private def apply[TT](getOps: DataType.Aux[TT] => TypeOperations[TT])(
-      implicit
+  private def apply[TT](getOps: DataType.Aux[TT] => TypeOperations[TT])(implicit
       s: Storable[TT],
       m: DataTypeMeta[TT],
       ct: ClassTag[TT],
       bt: BoxingTag[TT]
-  ): DataType.Aux[TT] = new DataType {
-    override type T = TT
-    override val meta: DataTypeMeta[T] = m
-    override val storable: Storable[T] = s
-    override val classTag: ClassTag[T] = ct
-    override val boxingTag: BoxingTag[T] = bt
-    override lazy val operations: TypeOperations[TT] = getOps(this)
-  }
+  ): DataType.Aux[TT] =
+    new DataType {
+      override type T = TT
+      override val meta: DataTypeMeta[T] = m
+      override val storable: Storable[T] = s
+      override val classTag: ClassTag[T] = ct
+      override val boxingTag: BoxingTag[T] = bt
+      override lazy val operations: TypeOperations[TT] = getOps(this)
+    }
 }

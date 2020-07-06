@@ -77,7 +77,7 @@ class InternalRowBuilder(val exprIndex: scala.collection.Map[Expression, Int], t
             case _ => None
           }
           tag.foreach { t =>
-            tagIndexes(t & 0xFF) = index
+            tagIndexes(t & 0xff) = index
           }
       }
 
@@ -88,7 +88,7 @@ class InternalRowBuilder(val exprIndex: scala.collection.Map[Expression, Int], t
   def this(queryContext: QueryContext) = this(queryContext.exprsIndex, queryContext.query.table)
 
   def set(tag: Byte, v: Option[Any]): Unit = {
-    val index = tagExprsIndexes(tag & 0xFF)
+    val index = tagExprsIndexes(tag & 0xff)
     if (index != -1) {
       data(index) = v
     }
