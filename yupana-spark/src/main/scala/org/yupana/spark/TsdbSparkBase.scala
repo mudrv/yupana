@@ -114,7 +114,7 @@ abstract class TsdbSparkBase(
 
   override def finalizeQuery(
       queryContext: QueryContext,
-      data: RDD[Array[Option[Any]]],
+      data: RDD[Array[Any]],
       metricCollector: MetricQueryCollector
   ): DataRowRDD = {
     metricCollector.setRunningPartitions(data.getNumPartitions)
